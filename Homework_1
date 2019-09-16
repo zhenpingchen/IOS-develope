@@ -1,0 +1,65 @@
+import UIKit
+
+//定义花色枚举类型
+enum Suit{
+    case Heart  //红心
+    case Club   //梅花
+    case Spade  //黑桃
+    case Diamond    //方块
+}
+
+//定义卡牌结构体
+struct Card:Hashable{
+    var suit:Suit
+    var value:Int
+    init(s:Suit,v:Int){
+        suit=s
+        value=v
+    }
+}
+
+//定义玩家类
+class Player{
+    var cards=Set<Card>()
+    init(){}
+    //玩家得到一张牌
+    func get(card:Card){
+        cards.insert(card)
+    }
+}
+//定义扑克牌类
+class poker{
+    var cards=Set<Card>()
+    
+    //初始化扑克牌，生成54张牌，其中J，Q，K分别用11，12，13表示
+    //大王，小王分别用黑桃14和红桃14表示。
+    init(){
+        for i in 1..<14{
+            cards.insert(Card(s:Suit.Spade,v:i))
+            cards.insert(Card(s:Suit.Heart,v:i))
+            cards.insert(Card(s:Suit.Club,v:i))
+            cards.insert(Card(s:Suit.Diamond,v:i))
+        }
+        cards.insert(Card(s:Suit.Spade,v:14))
+        cards.insert(Card(s:Suit.Heart,v:14))
+    }
+    
+    //随机去一张牌，如果没有牌可取返回nil
+    func random_pick()->Card?{
+        if cards.count>0{
+       return cards.remove(cards.randomElement()!)
+        }
+        return nil
+    }
+    
+    //输入玩家，给玩家发牌
+    func contribute(players:Player ...){
+        while(cards.count>0){
+            for player in players{
+                if cards.count>0{
+                    player.get(card:cards.randomElement()!)
+                }
+            }
+        }
+    }
+}
